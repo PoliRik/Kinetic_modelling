@@ -1,0 +1,257 @@
+clc 
+clear
+close all
+
+%data loading
+load data.mat
+
+%data plotting 
+figure
+plot(iso60(38:end,1)*60,iso60(38:end,2),'LineWidth',2);
+grid on
+xlabel ('Time [min]')
+ylabel ('H [J/g]')
+title ('Isothermal 60')
+
+figure
+plot(iso80(45:5000,1),iso80(45:5000,2),'LineWidth',2);
+grid on
+xlabel ('Time [min]')
+ylabel ('H [J/g]')
+title ('Isothermal 80')
+
+figure
+plot(iso100(13:3000,1),iso100(13:3000,2),'LineWidth',2);
+grid on
+xlabel ('Time [min]')
+ylabel ('H [J/g]')
+title ('Isothermal 100')
+
+figure
+plot(iso120(64:1858,1)*60,iso120(64:1858,2),'LineWidth',2);
+grid on
+xlabel ('Time [min]')
+ylabel ('H [J/g]')
+title ('Isothermal 120')
+
+figure
+plot(DSCdata_non_iso(:,1),DSCdata_non_iso(:,2),'LineWidth',2);
+grid on
+xlabel ('Temperature [K]')
+ylabel ('H [J/g]')
+title ('Non isothermal')
+
+%% Non_iso HT & alpha
+non_iso_mass= 13.470; %mg
+
+[k,Index1] = max(DSCdata_non_iso(1:86,2));
+time_non_iso=(DSCdata_non_iso(:,1)/10)*60; %10°/min -> sec
+[minn,Index_2] = min(abs(DSCdata_non_iso(1038:1103,2)-k));
+Index2 = 1037+Index_2;
+
+figure
+plot(time_non_iso,DSCdata_non_iso(:,2),'b','LineWidth',2);
+grid on
+xlabel ('Time [s]')
+ylabel ('H [J/g]')
+
+line([time_non_iso(Index1),time_non_iso(Index2)],[k,k],'LineWidth',2) 
+hold on
+eq_norm= DSCdata_non_iso(Index1 : Index2,2) - k;
+time_non_iso_int = time_non_iso(Index1:Index2);
+
+Diff = diff(time_non_iso_int);
+t_step = [0; Diff];
+
+H_i = cumsum(t_step.*eq_norm);
+H_t = H_i(end)/non_iso_mass
+alpha = H_i/(non_iso_mass*H_t); %non_iso
+
+figure
+plot(time_non_iso_int,alpha,'r','LineWidth',2);
+grid on
+xlabel('Time [s]')
+ylabel('Alpha')
+
+
+%% Iso H_i and alpha_max 60°
+
+iso_mass60= 6.620; %mg
+
+iso60sec=iso60(38:end,1)*60;
+H_60=iso60(38:end,2);
+figure
+plot(iso60sec,H_60,'r','LineWidth',2);
+hold on
+x=[iso60sec(39),iso60sec(end)];
+y=[iso60(39,2),iso60(end,2)];
+line([x(1),x(2)],[y(1),y(2)],'LineWidth',2)
+grid on
+xlabel ('Time[s]')
+ylabel ('H [J/g]')
+
+
+m = (iso60(end,2)-iso60(39,2))/(iso60sec(end)-iso60sec(39));
+n = iso60sec(end)*m - iso60(end,2);
+ref_60=m*iso60sec(:)-n;
+
+
+eq_norm60=ref_60-H_60;
+
+Diff60 = diff(iso60sec);
+t_step60 = [0; Diff60];
+
+H_i60 = -cumsum(t_step60.*eq_norm60);
+Ht_60 = H_i60(end)/iso_mass60;
+alpha_60 = H_i60/(iso_mass60*H_t); 
+
+
+Diff1_60 = diff(H_60);
+dH_60 = [0;Diff1_60];
+dadt_60 = (dH_60./t_step60)*(1/H_t);
+
+figure
+plot(iso60sec(1:500),-dadt_60(1:500),'m','LineWidth',2);
+grid on 
+xlabel('Time[s]')
+ylabel('Reaction rate [s^{-1}]')
+
+figure
+plot(iso60sec,alpha_60,'r','LineWidth',2);
+grid on 
+xlabel('Time[s]')
+ylabel('Alpha')
+
+alpha_max60=alpha_60(end)
+
+%% Iso H_i and alpha_max 80°
+
+iso_mass80= 4.480; %mg
+t_80=iso80(:,1)*60;
+H_80 = iso80(:,2);
+
+ref_80=H_80(end); %reference line 
+[~,Index_3] = min(abs(H_80(1:400)-ref_80));
+H_80 = H_80(Index_3:end);
+t_80 = t_80(Index_3:end);
+
+figure
+plot(t_80,H_80,'g','LineWidth',2);
+grid on
+xlabel ('Time[s]')
+ylabel ('H [J/g]')
+
+line([t_80(Index_3),t_80(end)],[ref_80,ref_80],'LineWidth',1) 
+
+eq_norm_80= H_80 - H_80(5000);
+Diff = diff(t_80);
+t_step = [0; Diff];
+
+H_i_80 = cumsum(t_step.*eq_norm_80);
+H_t_80 = H_i_80(end)/iso_mass80;
+alpha_80 = H_i_80/(iso_mass80*H_t); %non_iso
+
+
+Diff1 = diff(H_80);
+dH = [0;Diff1];
+dadt = (-dH./t_step)*(1/H_t);
+
+figure
+plot(t_80,alpha_80,'r','LineWidth',2);
+grid on
+xlabel('Time [s]')
+ylabel('Alpha')
+
+figure
+plot(t_80,dadt,'m','LineWidth',2);
+grid on
+xlabel('Time [s]')
+ylabel('Reaction rate [s^{-1}]')
+
+
+%% Iso H_i and alpha_max 120°
+
+iso_mass120= 6.840; %mg
+
+k=19.4;%reference line 
+
+iso120sec=iso120(64:end,1)*60;
+H_120=iso120(64:end,2);
+figure
+plot(iso120sec,H_120,'g','LineWidth',2);
+grid on
+hold on
+xlabel ('Time[s]')
+ylabel ('H [J/g]')
+
+yline(k,'r','Linewidth',1) 
+
+x=[iso120sec(1500),iso120sec(end)];
+y=[iso120(1500,2),iso120(end,2)];
+m = (iso120(end,2)-iso120(1500,2))/(iso120sec(end)-iso120sec(1500));
+n = iso120sec(end)*m - iso120(end,2);
+
+ref_120=m*iso120sec(:)-n;
+
+eq_norm120=H_120-ref_120;
+
+Diff120 = diff(iso120sec);
+t_step120 = [0; Diff120];
+
+H_i120 = cumsum(t_step120.*eq_norm120);
+Ht_120 = H_i120(end)/iso_mass120;
+alpha_120 = H_i120/(iso_mass120*H_t); 
+
+Diff1_120 = diff(H_120);
+dH = [0;Diff1_120];
+dadt_120 = -(dH./t_step120)*(1/H_t);
+
+figure
+plot(iso120sec,dadt_120,'m','LineWidth',2);
+grid on 
+xlabel('Time[s]')
+ylabel('Reaction rate [s^{-1}]')
+
+figure
+plot(iso120sec,alpha_120,'b','LineWidth',2);
+grid on 
+xlabel('Time[s]')
+ylabel('Alpha')
+alpha_max120=alpha_120(end)
+
+%% Kinetic model Iso 120
+
+%dα/dt=(k1 +k2α m)( 1-α)n
+
+K1=0.001213;
+K2=0.0160;
+EA2=77.1*10^3;
+EA1=95.9*10^3;
+T1=170+273.15;
+R = 8.314;
+
+T = 120 + 273.15; % [K]
+K01 = K1/exp(-EA1/(R*T1));
+K02 = K2/exp(-EA2/(R*T1));
+
+Ea1 = 95.9*10^3; % [J/mol]
+Ea2 = 77.1*10^3; % [J/mol]
+R = 8.314; % [J/(mol*K)]
+
+k1 = K01*exp(-Ea1/(R*T))
+k2 = K02*exp(-Ea2/(R*T))
+
+M=0.1; 
+N=1.9; 
+figure
+plot(iso120sec(12:end),dadt_120(12:end),'r','LineWidth',2);
+hold on
+
+K_M=(k1+k2.*(alpha_120).^M).*(alpha_max120-alpha_120).^N;
+
+plot(iso120sec,K_M,'b','LineWidth',2);
+grid on
+xlabel('Time[s]')
+ylabel('Reaction rate [s^{-1}]')
+legend ('Experimental data','Model data')
+
