@@ -37,8 +37,9 @@ title ('Isothermal 120')
 figure
 plot(DSCdata_non_iso(:,1),DSCdata_non_iso(:,2),'LineWidth',2);
 grid on
-xlabel ('Temperature [K]')
+xlabel ('Temperature [°C]')
 ylabel ('H [J/g]')
+ylim([5,26])
 title ('Non isothermal')
 
 %% Non_iso HT & alpha
@@ -102,7 +103,7 @@ Diff60 = diff(iso60sec);
 t_step60 = [0; Diff60];
 
 H_i60 = -cumsum(t_step60.*eq_norm60);
-Ht_60 = H_i60(end)/iso_mass60;
+Ht_60 = H_i60(end)/iso_mass60
 alpha_60 = H_i60/(iso_mass60*H_t); 
 
 
@@ -121,6 +122,7 @@ plot(iso60sec,alpha_60,'r','LineWidth',2);
 grid on 
 xlabel('Time[s]')
 ylabel('Alpha')
+ylim([0,1])
 
 alpha_max60=alpha_60(end)
 
@@ -148,7 +150,7 @@ Diff = diff(t_80);
 t_step = [0; Diff];
 
 H_i_80 = cumsum(t_step.*eq_norm_80);
-H_t_80 = H_i_80(end)/iso_mass80;
+H_t_80 = H_i_80(end)/iso_mass80
 alpha_80 = H_i_80/(iso_mass80*H_t); %non_iso
 
 
@@ -161,6 +163,7 @@ plot(t_80,alpha_80,'r','LineWidth',2);
 grid on
 xlabel('Time [s]')
 ylabel('Alpha')
+ylim([0,1])
 
 figure
 plot(t_80,dadt,'m','LineWidth',2);
@@ -168,6 +171,7 @@ grid on
 xlabel('Time [s]')
 ylabel('Reaction rate [s^{-1}]')
 
+alpha_max80=alpha_80(end)
 
 %% Iso H_i and alpha_max 120°
 
@@ -199,7 +203,7 @@ Diff120 = diff(iso120sec);
 t_step120 = [0; Diff120];
 
 H_i120 = cumsum(t_step120.*eq_norm120);
-Ht_120 = H_i120(end)/iso_mass120;
+Ht_120 = H_i120(end)/iso_mass120
 alpha_120 = H_i120/(iso_mass120*H_t); 
 
 Diff1_120 = diff(H_120);
@@ -213,10 +217,12 @@ xlabel('Time[s]')
 ylabel('Reaction rate [s^{-1}]')
 
 figure
-plot(iso120sec,alpha_120,'b','LineWidth',2);
+plot(iso120sec,alpha_120,'r','LineWidth',2);
 grid on 
 xlabel('Time[s]')
 ylabel('Alpha')
+ylim([0,1])
+
 alpha_max120=alpha_120(end)
 
 %% Kinetic model Iso 120
@@ -231,8 +237,8 @@ T1=170+273.15;
 R = 8.314;
 
 T = 120 + 273.15; % [K]
-K01 = K1/exp(-EA1/(R*T1));
-K02 = K2/exp(-EA2/(R*T1));
+K01 = K1/exp(-EA1/(R*T1))
+K02 = K2/exp(-EA2/(R*T1))
 
 Ea1 = 95.9*10^3; % [J/mol]
 Ea2 = 77.1*10^3; % [J/mol]
@@ -244,12 +250,12 @@ k2 = K02*exp(-Ea2/(R*T))
 M=0.1; 
 N=1.9; 
 figure
-plot(iso120sec(12:end),dadt_120(12:end),'r','LineWidth',2);
+plot(iso120sec(12:end),dadt_120(12:end),'r','LineWidth',1);
 hold on
 
 K_M=(k1+k2.*(alpha_120).^M).*(alpha_max120-alpha_120).^N;
 
-plot(iso120sec,K_M,'b','LineWidth',2);
+plot(iso120sec,K_M,'b','LineWidth',1);
 grid on
 xlabel('Time[s]')
 ylabel('Reaction rate [s^{-1}]')
