@@ -10,37 +10,37 @@ figure
 plot(iso60(38:end,1)*60,iso60(38:end,2),'LineWidth',2);
 grid on
 xlabel ('Time [min]')
-ylabel ('H [J/g]')
+ylabel ('H [mW]')
 title ('Isothermal 60')
 
 figure
 plot(iso80(45:5000,1),iso80(45:5000,2),'LineWidth',2);
 grid on
 xlabel ('Time [min]')
-ylabel ('H [J/g]')
+ylabel ('H [mW]')
 title ('Isothermal 80')
 
 figure
 plot(iso100(13:3000,1),iso100(13:3000,2),'LineWidth',2);
 grid on
 xlabel ('Time [min]')
-ylabel ('H [J/g]')
+ylabel ('H [mW]')
 title ('Isothermal 100')
 
 figure
 plot(iso120(64:1858,1)*60,iso120(64:1858,2),'LineWidth',2);
 grid on
 xlabel ('Time [min]')
-ylabel ('H [J/g]')
+ylabel ('H [mW]')
 title ('Isothermal 120')
 
 figure
 plot(DSCdata_non_iso(:,1),DSCdata_non_iso(:,2),'LineWidth',2);
 grid on
 xlabel ('Temperature [°C]')
-ylabel ('H [J/g]')
+ylabel ('H [mW]')
 ylim([5,26])
-title ('Non isothermal')
+%title ('Non isothermal')
 
 %% Non_iso HT & alpha
 non_iso_mass= 13.470; %mg
@@ -54,7 +54,7 @@ figure
 plot(time_non_iso,DSCdata_non_iso(:,2),'b','LineWidth',2);
 grid on
 xlabel ('Time [s]')
-ylabel ('H [J/g]')
+ylabel ('H [mW]')
 
 line([time_non_iso(Index1),time_non_iso(Index2)],[k,k],'LineWidth',2) 
 hold on
@@ -89,7 +89,7 @@ y=[iso60(39,2),iso60(end,2)];
 line([x(1),x(2)],[y(1),y(2)],'LineWidth',2)
 grid on
 xlabel ('Time[s]')
-ylabel ('H [J/g]')
+ylabel ('H [mW]')
 
 
 m = (iso60(end,2)-iso60(39,2))/(iso60sec(end)-iso60sec(39));
@@ -141,7 +141,7 @@ figure
 plot(t_80,H_80,'g','LineWidth',2);
 grid on
 xlabel ('Time[s]')
-ylabel ('H [J/g]')
+ylabel ('H [mW]')
 
 line([t_80(Index_3),t_80(end)],[ref_80,ref_80],'LineWidth',1) 
 
@@ -186,7 +186,7 @@ plot(iso120sec,H_120,'g','LineWidth',2);
 grid on
 hold on
 xlabel ('Time[s]')
-ylabel ('H [J/g]')
+ylabel ('H [mW]')
 
 yline(k,'r','Linewidth',1) 
 
@@ -260,4 +260,3 @@ grid on
 xlabel('Time[s]')
 ylabel('Reaction rate [s^{-1}]')
 legend ('Experimental data','Model data')
-
