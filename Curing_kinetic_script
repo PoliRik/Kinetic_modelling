@@ -260,3 +260,13 @@ grid on
 xlabel('Time[s]')
 ylabel('Reaction rate [s^{-1}]')
 legend ('Experimental data','Model data')
+
+figure
+plot(alpha_120,dadt_120,'r','LineWidth',1);
+grid on
+hold on
+
+plot(alpha_120,K_M,'b','LineWidth',1);
+xlim([-0.01,1])
+xlabel('Alpha')
+ylabel('Reaction rate [s^-1]')
